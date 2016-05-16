@@ -1,13 +1,14 @@
 #coding:utf-8
 
 import urllib2
+import re
 
 """
 	将数据写入到文件当中
 """
 def writeToFile (dest, data):
 	try:
-		page_file = open (dest, 'w')
+		page_file = open (dest, 'a')
 		page_file.write (data)	#将文件写入到dest
 	except IOError:
 		print ('io error')
@@ -28,7 +29,14 @@ def getPage(url):
 	urlRequest = urllib2.Request(hostUrl,'', header)
 	response = urllib2.urlopen(urlRequest)
 	html = response.read ()
-	writeToFile('page.data', html)	
+	# writeToFile('page.data', html)
+	return html
+
+
+"""
+	
+"""
+# def 
 
 
 

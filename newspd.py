@@ -1,13 +1,16 @@
 #coding:utf-8
 
 import urllib2
+import re
+
+mainUrl = "http://www.dianping.com"		# uri的主体
 
 """
 	将数据写入到文件当中
 """
 def writeToFile (dest, data):
 	try:
-		page_file = open (dest, 'w')
+		page_file = open (dest, 'a')
 		page_file.write (data)	#将文件写入到dest
 	except IOError:
 		print ('io error')
@@ -28,9 +31,24 @@ def getPage(url):
 	urlRequest = urllib2.Request(hostUrl,'', header)
 	response = urllib2.urlopen(urlRequest)
 	html = response.read ()
-	writeToFile('page.data', html)	
+	return html
+	# writeToFile('page.data', html)
+
+"""
+	通过正则表达式过滤出页面中想要的那一部分数据
+"""
+def getContentByPattern (pattern, string):
+	result = re.findall (pattern, string)
+	return result
 
 
+def listConvertStr (list):
+	return "\r\n".join(list) 
 
 ###以下为主函数
-getPage('http://www.dianping.com/search/category/1/10/g113r801')
+html =  getPage('http://www.dianping.com/search/category/1/10/g113r801')	#获取网页的所有内容
+
+patternCat = r"(?<=href=\").+?(?=\")|(?<=href=\').+?(?=\')"			#分类的pattern
+data = getContentByPattern (patternCat, html)						# 正则表达式过滤后的内容
+# print (data)
+writeToFile ("./page.data", listConvertStr(data))										# j将过滤后的内容存储到文件中
